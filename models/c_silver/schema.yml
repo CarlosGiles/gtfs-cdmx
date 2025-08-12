@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: silver__routes
+    description: "Rutas de Metro y Metrobús (solo agency_id in ('METRO','MB'))."
+    columns:
+      - name: route_id
+        tests: [not_null, unique]
+      - name: agency_id
+        tests:
+          - accepted_values:
+              values: ['METRO','MB']
+
+  - name: silver__stops
+    description: "Catálogo de paradas/estaciones limpio."
+    columns:
+      - name: stop_id
+        tests: [not_null, unique]
+      - name: stop_lat
+        tests: [not_null]
+      - name: stop_lon
+        tests: [not_null]
+
+  - name: silver__service
+    description: "Calendario base por service_id con flags de días y rango de fechas."
+    columns:
+      - name: service_id
+        tests: [not_null, unique]
+
+  - name: silver__trips
+    description: "Viajes integrados con metadatos de ruta/servicio."
+    columns:
+      - name: trip_id
+        tests: [not_null, unique]
+      - name: route_id
+        tests:
+          - relationships:
+              to: ref('silver__routes')
+              field: route_id
+      - name: service_id
+        tests:
+          - relationships:
+              to: ref('silver__service')
+              field: service_id
+
+  - name: silver__stop_times
+    description: "Horarios por parada con tiempos en segundos y métricas de tramo."
+    columns:
+      - name: trip_id
+        tests:
+          - relationships:
+              to: ref('silver__trips')
+              field: trip_id
+      - name: stop_id
+        tests:
+          - relationships:
+              to: ref('silver__stops')
+              field: stop_id
+
+  - name: silver__frequencies
+    description: "Headways (start/end en segundos) por trip."
+    columns:
+      - name: trip_id
+        tests:
+          - relationships:
+              to: ref('silver__trips')
+              field: trip_id

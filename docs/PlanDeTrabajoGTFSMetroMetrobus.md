@@ -59,7 +59,7 @@ Para estructurar el flujo de datos de manera clara y escalable, se adopta la **a
 
 Este enfoque en capas asegura claridad: cada nivel tiene un propósito distinto y reduce la complejidad. Además, permite reusar las capas inferiores si se requieren nuevos análisis (por ejemplo, si en el futuro se quisieran otras métricas, se podría partir de Silver sin tener que re-extraer todo). La división Bronze/Silver/Gold está alineada con las buenas prácticas recomendadas en entornos de **Snowflake, dbt** y otras plataformas modernas. En Snowflake, implementaremos cada capa en un esquema separado dentro de una misma base de datos de proyecto (por ejemplo: `GTFS_BRONZE`, `GTFS_SILVER`, `GTFS_GOLD`) para una segregación lógica clara de las tablas de cada etapa.
 
-![DAG](./Assets/DAG-no-fondo.png)
+![DAG](./../Assets/DAG-no-fondo.png)
 
 ### 4.2 Implementación Tecnológica y Herramientas
 
@@ -89,7 +89,7 @@ A continuación se detalla cómo se emplearán **Airflow, Snowflake y dbt** en l
 
 * **Otros:** Python se empleará en puntos específicos, principalmente en la etapa de ingestión (p. ej., para descargar el archivo GTFS si es mediante URL, o para desempaquetar el zip y quizás preprocesar algo si fuera necesario). No obstante, la mayor parte de la lógica de negocio de transformación se mantendrá en SQL (via dbt) dentro de Snowflake, lo que aprovecha la potencia del motor de base de datos y sigue una filosofía ELT. Adicionalmente, si surgiera la necesidad de cálculos complejos fuera del alcance de SQL estándar (por ejemplo, cálculo de rutas más cortas para conectividad, etc.), se evaluaría incorporarlos con Python ya sea dentro de Snowflake (procedimientos almacenados en Python, Snowpark) o por fuera exportando ciertos datos, pero esto solo si es estrictamente necesario. De momento, se prevé que SQL es suficiente para los KPIs planteados.
 
-![PIPELINE](./Assets/Arquitectura-no-fondo.png)
+![PIPELINE](./../Assets/Arquitectura-no-fondo.png)
 
 ### 4.3 Esquema de Carpeta y Nomenclatura del Proyecto
 
